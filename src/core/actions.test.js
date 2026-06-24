@@ -183,14 +183,27 @@ describe('actions', () => {
 	});
 
 	test('clearBullets test', () => {
-		jest.spyOn(playerManager, 'removeHitBullets')
+		const mockContext = {
+			state: {
+				bullets: Symbol('bullets'),
+				enemyBullets: Symbol('enemyBullets'),
+			},
+		};
+		jest.spyOn(playerManager, 'removeBullets')
 			.mockReturnValue(returnValue);
 
-		const expected = { bullets: returnValue };
+		const expected = { bullets: returnValue, enemyBullets: returnValue };
 
-		const result = clearBullets(context);
+		const result = clearBullets(mockContext);
 
-		expect(playerManager.removeHitBullets).toHaveBeenCalledWith(context);
+		expect(playerManager.removeBullets).toHaveBeenNthCalledWith(1, {
+			...mockContext,
+			data: mockContext.state.bullets,
+		});
+		expect(playerManager.removeBullets).toHaveBeenNthCalledWith(2, {
+			...mockContext,
+			data: mockContext.state.enemyBullets,
+		});
 
 		expect(result).toMatchObject(expected);
 	});
@@ -264,5 +277,25 @@ describe('actions', () => {
 
 		expect(playerManager.processEnemyBullets).toHaveBeenCalledWith(context);
 		expect(result).toEqual(expected);
+	});
+
+	test('test generateEnemyBullets', () => {
+		jest.spyOn(targetManager, 'generateEnemyBullets')
+			.mockReturnValue(returnValue);
+
+		const result = actions.generateEnemyBullets(context);
+
+		expect(targetManager.generateEnemyBullets).toHaveBeenCalledWith(context);
+		expect(result).toEqual({ enemyBullets: returnValue });
+	});
+
+	test('test moveEnemyBullets', () => {
+		jest.spyOn(playerManager, 'moveEnemyBullets')
+			.mockReturnValue(returnValue);
+
+		const result = actions.moveEnemyBullets(context);
+
+		expect(playerManager.moveEnemyBullets).toHaveBeenCalledWith(context);
+		expect(result).toEqual({ enemyBullets: returnValue });
 	});
 });

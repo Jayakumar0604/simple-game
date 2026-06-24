@@ -11,7 +11,7 @@ import helper from '../testHelper/helper';
 describe('PlayerManager', () => {
 	const { isAlive, decreaseHealth, backGroundMovingAxis,
 		updateBackgroundObjects, resetBackgroundObjects, moveBullets,
-		detectBulletHit, removeHitBullets,
+		detectBulletHit, removeBullets, moveEnemyBullets,
 		generateObjects, createObjects, removeTargets,
 		isBulletHit, calDamage, detectOverLapping
 		, collectHits, updateHealth, processHits,
@@ -67,25 +67,16 @@ describe('PlayerManager', () => {
 		expect(result).toEqual(expectation);
 	});
 
-	describe('removeHitBullets test', () => {
-		const state = {
-			bullets: [{
-				id: 320,
-				isHit: true,
-			},
-			{
-				id: 201,
-				isHit: false,
-			}],
-		};
-
-		test('Test removeHitBullets', () => {
-			const result = removeHitBullets({ state });
-
-			const expectation = [{
-				id: 201,
-				isHit: false,
-			}];
+	describe('removeBullets test', () => {
+		test('Test removeBullets', () => {
+			const data = [
+				{ id: 1, isHit: true, y: 50 },
+				{ id: 2, isHit: false, y: 150 },
+				{ id: 3, isHit: false, y: -10 },
+				{ id: 4, isHit: false, y: 50 },
+			];
+			const result = removeBullets({ data });
+			const expectation = [{ id: 4, isHit: false, y: 50 }];
 
 			expect(result).toMatchObject(expectation);
 		});
@@ -103,6 +94,23 @@ describe('PlayerManager', () => {
 				y: 95,
 			}];
 			const result = moveBullets({ state, config });
+
+			expect(result).toEqual(expected);
+		});
+	});
+
+	describe('moveEnemyBullets', () => {
+		const state = {
+			enemyBullets: [{
+				y: 10,
+			}],
+		};
+
+		test('moveEnemyBullets increase yPos', () => {
+			const expected = [{
+				y: 15,
+			}];
+			const result = moveEnemyBullets({ state, config });
 
 			expect(result).toEqual(expected);
 		});

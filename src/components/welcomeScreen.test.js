@@ -5,13 +5,19 @@ import WelcomeScreen from './welcomeScreen';
 describe('WelcomeScreen', () => {
 	const actions = {
 		gameStart: jest.fn(),
+		setHelp: jest.fn(),
 	};
 	const state = {
 		ready: rndValue([true, false]),
+		help: rndValue([true, false]),
+	};
+	const config = {
+		shortcutKeys: [],
 	};
 	const context = {
 		actions,
 		state,
+		config,
 	};
 
 	test('Render WelcomeScreen', () => {
@@ -27,8 +33,21 @@ describe('WelcomeScreen', () => {
 		const component = render(WelcomeScreen(context))
 			.getByRole('welcomeScreen');
 
-		fireEvent.click(component, !state.ready);
+		fireEvent.click(component.children[0]);
 
 		expect(actions.gameStart).toHaveBeenCalledWith(!state.ready);
+	});
+
+	test('Fire Help Event', () => {
+		const component = render(WelcomeScreen(context))
+			.getByRole('welcomeScreen');
+
+		const helpButton = component.children[1];
+		const blurMock = jest.fn();
+
+		fireEvent.click(helpButton, { target: { blur: blurMock } });
+
+		expect(blurMock).toHaveBeenCalled();
+		expect(actions.setHelp).toHaveBeenCalledWith(!state.help);
 	});
 });

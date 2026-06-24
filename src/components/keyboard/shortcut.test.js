@@ -26,6 +26,16 @@ describe('shortcut', () => {
 		});
 	});
 
+	test('gameStart when help is active', () => {
+		const actions = { gameStart: jest.fn() };
+		const state = { ready: false, help: true };
+		const context = { actions, state };
+
+		shortcut.gameStart(context);
+
+		expect(actions.gameStart).not.toHaveBeenCalled();
+	});
+
 	test('help', () => {
 		const actions = { setHelp: jest.fn(), setPlayPause: jest.fn() };
 		const state = {

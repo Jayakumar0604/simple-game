@@ -1,3 +1,5 @@
+jest.mock('../container', () => jest.fn());
+
 import React from 'react';
 import { render } from '@testing-library/react';
 import TwoDMode from './2dMode';

@@ -30,7 +30,7 @@ describe('Game', () => {
 			expect(getByRole('keyboard')).toBeInTheDocument();
 			expect(playerManager.isAlive).toHaveBeenCalledWith(context);
 			expect(getByRole('gameOverScreen')).toBeInTheDocument();
-			expect(GameOverScreen.default).toHaveBeenCalledWith(context);
+			expect(GameOverScreen.default.mock.calls[0][0]).toEqual(context);
 		});
 
 		test(' Game Alive Screen', () => {
@@ -44,7 +44,7 @@ describe('Game', () => {
 			expect(getByRole('game')).toBeInTheDocument();
 			expect(playerManager.isAlive).toHaveBeenCalledWith(context);
 			expect(getByRole('gameScreen')).toBeInTheDocument();
-			expect(GameScreen.default).toHaveBeenCalledWith(context);
+			expect(GameScreen.default.mock.calls[0][0]).toEqual(context);
 		});
 	});
 
@@ -61,6 +61,6 @@ describe('Game', () => {
 		const { getByRole } = render(Game(context));
 
 		expect(getByRole('welcomeScreen')).toBeInTheDocument();
-		expect(WelcomeScreen.default).toHaveBeenCalledWith(context);
+		expect(WelcomeScreen.default.mock.calls[0][0]).toEqual(context);
 	});
 });

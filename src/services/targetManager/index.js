@@ -10,6 +10,9 @@ const { maxTargets } = config;
 const targetTypeKeys = keys(config.targets);
 const sixtyFive = 65;
 const threeHundredFifty = 350;
+const five = 5;
+const pointTwo = 0.2;
+const pointZeroTwo = 0.02;
 
 const targetManager = {
 
@@ -35,18 +38,30 @@ const targetManager = {
 		isProbable(config.targets[type].prop.spawn)
 		&& targetManager.getTargets({ type })).filter(truthy),
 
-	addTargets: ({ state: { targets }}) =>
-		(targets.length < maxTargets
+	addTargets: (context) => {
+		const { state: { targets, score = 0 }} = context;
+		const dynamicMaxTargets = maxTargets + Math.floor(score / five);
+
+		return targets.length < dynamicMaxTargets
 			? [
 				...targets,
 				...targetManager.spawnTargets(),
 			]
-			:	targets),
+			:	targets;
+	},
 
 	generateenemyBullet: (context) => {
-		const target = rndValue(context.state.targets);
+		const { state: { targets, score = 0 }} = context;
+		const target = rndValue(targets);
 
-		return isProbable(target.prop.bulletSpawn) && {
+		if(!target)
+			return false;
+
+		const rawProb = Math.floor(score / five) * pointZeroTwo;
+		const extraProb = Math.min(pointTwo, rawProb);
+		const bulletSpawnProb = target.prop.bulletSpawn + extraProb;
+
+		return isProbable(bulletSpawnProb) && {
 			...GameService.makeBullet({
 				...context,
 				data: GameService.getType(context),

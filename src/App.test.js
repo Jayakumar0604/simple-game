@@ -18,5 +18,5 @@ test('App renders Game', () => {
 
 	expect(React.useEffect).toHaveBeenCalledWith(ticker.start, []);
 	expect(getByRole('game')).toBeInTheDocument();
-	expect(Game.default).toHaveBeenCalledWith({ context });
+	expect(Game.default.mock.calls[0][0]).toEqual({ context });
 });

@@ -8,10 +8,7 @@ test('Help', () => {
 	[true, false].map((help) => {
 		const state = { help };
 		const config = { shortcutKeys: Symbol('shortcutKeys') };
-		const actions = {
-			setHelp: jest.fn(),
-		};
-		const context = { state, actions, config };
+		const context = { state, config };
 
 		jest.spyOn(Container, 'default').mockReturnValue(<div/>);
 
@@ -19,21 +16,14 @@ test('Help', () => {
 
 		expect(component).toBeInTheDocument();
 		expect(component).toHaveClass('help');
-		expect(component.children[0]).toBeInTheDocument();
-		expect(component.children[0]).toHaveClass('helpButton');
 
-		const shortcutKeys = () => {
-			expect(component.children[1]).toBeInTheDocument();
-			expect(component.children[1].children[0]).toBeInTheDocument();
-			expect(component.children[1]).toHaveClass('shortcutKeys');
+		if (help) {
+			expect(component.children[0]).toBeInTheDocument();
+			expect(component.children[0]).toHaveClass('shortcutKeys');
 			expect(Container.default)
 				.toHaveBeenCalledWith(config.shortcutKeys, ShortcutKey);
-		};
-
-		help && shortcutKeys();
-
-		fireEvent.click(component.children[0]);
-
-		expect(actions.setHelp).toHaveBeenCalledWith(!state.help);
+		} else {
+			expect(component.children.length).toBe(0);
+		}
 	});
 });
