@@ -21,31 +21,30 @@ describe('WelcomeScreen', () => {
 	};
 
 	test('Render WelcomeScreen', () => {
-		const component = render(WelcomeScreen(context))
-			.getByRole('welcomeScreen');
+		const { container } = render(WelcomeScreen(context));
+		const component = container.querySelector('.welcomeScreen');
+		const startBtn = container.querySelector('.start-btn');
 
-		expect(component.children[0]).toHaveTextContent('Start');
+		expect(startBtn).toHaveTextContent('Start Game');
 		expect(component).toHaveClass('welcomeScreen');
 		expect(component).toBeInTheDocument();
 	});
 
 	test('Fire Event', () => {
-		const component = render(WelcomeScreen(context))
-			.getByRole('welcomeScreen');
+		const { container } = render(WelcomeScreen(context));
+		const startBtn = container.querySelector('.start-btn');
 
-		fireEvent.click(component.children[0]);
+		fireEvent.click(startBtn);
 
 		expect(actions.gameStart).toHaveBeenCalledWith(!state.ready);
 	});
 
 	test('Fire Help Event', () => {
-		const component = render(WelcomeScreen(context))
-			.getByRole('welcomeScreen');
-
-		const helpButton = component.children[1];
+		const { container } = render(WelcomeScreen(context));
+		const helpBtn = container.querySelector('.help-btn');
 		const blurMock = jest.fn();
 
-		fireEvent.click(helpButton, { target: { blur: blurMock } });
+		fireEvent.click(helpBtn, { target: { blur: blurMock } });
 
 		expect(blurMock).toHaveBeenCalled();
 		expect(actions.setHelp).toHaveBeenCalledWith(!state.help);

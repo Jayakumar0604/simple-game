@@ -14,6 +14,7 @@ describe('testing GameScreen', () => {
 	const context = {
 		state: {
 			bgnScreenY: rndString(),
+			health: 100,
 		},
 		actions: {
 			updateMousePosition: jest.fn(),
@@ -38,12 +39,13 @@ describe('testing GameScreen', () => {
 		jest.spyOn(collection, 'values')
 			.mockReturnValue(shortcutListComponent);
 		jest.spyOn(getMode, 'default').mockReturnValue(rndMode);
-		const component = render(GameScreen(context)).getByRole('gameScreen');
+		const component = render(<GameScreen { ...context }/>)
+			.getByRole('gameScreen');
 
 		expect(component).toBeInTheDocument();
 		expect(component).toHaveClass('game-screen');
 		shortcutListComponent.map((shortcutComponent, i) => {
-			expect(render(GameScreen(context))
+			expect(render(<GameScreen { ...context }/>)
 				.getAllByRole(shortcutComponent.props.role)[i])
 				.toBeInTheDocument();
 		});
@@ -55,7 +57,8 @@ describe('testing GameScreen', () => {
 		jest.spyOn(actions, 'generateBullets');
 		jest.spyOn(getMode, 'default').mockReturnValue(rndMode);
 
-		const component = render(GameScreen(context)).getByRole('gameScreen');
+		const component = render(<GameScreen { ...context }/>)
+			.getByRole('gameScreen');
 
 		const mouseEvent = { _reactName: 'onMouseMove', type: 'mousemove' };
 		const clickEvent = { _reactName: 'onClick', type: 'click' };
@@ -73,10 +76,50 @@ describe('testing GameScreen', () => {
 	test('gameMode', () => {
 		jest.spyOn(getMode, 'default').mockReturnValue(rndMode);
 
-		const { getByRole } = render(GameScreen(context));
+		const { getByRole } = render(<GameScreen { ...context }/>);
 
 		expect(getByRole('gameScreen')).toBeInTheDocument();
 		expect(getByRole(rndMode)).toBeInTheDocument();
 		expect(getMode.default).toHaveBeenCalledWith(context);
+	});
+
+	test('renders damage flash overlay when health decreases', () => {
+		jest.useFakeTimers();
+		const currentContext = {
+			state: {
+				bgnScreenY: rndString(),
+				health: 100,
+			},
+			actions: {
+				updateMousePosition: jest.fn(),
+				updateFlightPosition: jest.fn(),
+				generateBullets: jest.fn(),
+			},
+		};
+
+		jest.spyOn(getMode, 'default').mockReturnValue(rndMode);
+
+		const { getByRole, rerender } = render(
+			<GameScreen { ...currentContext }/>
+		);
+		const flashElement = getByRole('damage-flash');
+
+		expect(flashElement).not.toHaveClass('flash');
+
+		const decreasedContext = {
+			...currentContext,
+			state: {
+				...currentContext.state,
+				health: 80,
+			},
+		};
+		rerender(<GameScreen { ...decreasedContext }/>);
+
+		expect(flashElement).toHaveClass('flash');
+
+		jest.advanceTimersByTime(150);
+
+		expect(flashElement).not.toHaveClass('flash');
+		jest.useRealTimers();
 	});
 });

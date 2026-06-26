@@ -114,6 +114,21 @@ describe('PlayerManager', () => {
 
 			expect(result).toEqual(expected);
 		});
+
+		test('moveEnemyBullets increases speed with higher score', () => {
+			const stateWithScore = {
+				score: 10,
+				enemyBullets: [{
+					y: 10,
+				}],
+			};
+			const expected = [{
+				y: 16,
+			}];
+			const result = moveEnemyBullets({ state: stateWithScore, config });
+
+			expect(result).toEqual(expected);
+		});
 	});
 
 	test('detectBulletHit', () => {

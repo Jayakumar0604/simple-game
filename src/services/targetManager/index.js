@@ -11,8 +11,8 @@ const targetTypeKeys = keys(config.targets);
 const sixtyFive = 65;
 const threeHundredFifty = 350;
 const five = 5;
-const pointTwo = 0.2;
-const pointZeroTwo = 0.02;
+const pointFour = 0.4;
+const pointZeroThree = 0.03;
 
 const targetManager = {
 
@@ -57,8 +57,8 @@ const targetManager = {
 		if(!target)
 			return false;
 
-		const rawProb = Math.floor(score / five) * pointZeroTwo;
-		const extraProb = Math.min(pointTwo, rawProb);
+		const rawProb = Math.floor(score / five) * pointZeroThree;
+		const extraProb = Math.min(pointFour, rawProb);
 		const bulletSpawnProb = target.prop.bulletSpawn + extraProb;
 
 		return isProbable(bulletSpawnProb) && {

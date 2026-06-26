@@ -5,6 +5,8 @@ import { rndString } from '@laufire/utils/random';
 import * as helperService from '../services/helperService';
 
 const hundred = 100;
+const five = 5;
+const pointFive = 0.5;
 
 const PlayerManager = {
 	isAlive: ({ state }) => state.health > 0,
@@ -31,11 +33,17 @@ const PlayerManager = {
 			y: bullet.y - config.moveBulletPercentage,
 		})),
 
-	moveEnemyBullets: ({ state, config }) =>
-		state.enemyBullets.map((enemyBullet) => ({
+	moveEnemyBullets: ({ state, config }) => {
+		const score = state.score || 0;
+		const extraSpeed = Math.floor(score / five) * pointFive;
+		const finalSpeed = config.moveBulletPercentage
+			+ Math.min(five, extraSpeed);
+
+		return state.enemyBullets.map((enemyBullet) => ({
 			...enemyBullet,
-			y: enemyBullet.y + config.moveBulletPercentage,
-		})),
+			y: enemyBullet.y + finalSpeed,
+		}));
+	},
 
 	detectBulletHit: ({ state: { targets, bullets }}) =>
 		bullets.map((bullet) => ({

@@ -175,7 +175,7 @@ describe('target Manager', () => {
 			const context = {
 				state: {
 					targets: [target],
-					score: 10, // extraProb = 0.04 -> bulletSpawnProb = 0.09
+					score: 10, // extraProb = 0.06 -> bulletSpawnProb = 0.11
 				},
 			};
 
@@ -186,7 +186,7 @@ describe('target Manager', () => {
 
 			const result = TargetManager.generateenemyBullet(context);
 
-			expect(HelperService.isProbable).toHaveBeenCalledWith(0.09);
+			expect(HelperService.isProbable).toHaveBeenCalledWith(0.11);
 			expect(result).toEqual({
 				id: 'bullet1',
 				x: 40,

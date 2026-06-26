@@ -1,26 +1,34 @@
 import { React } from 'react';
 import HelpList from './shortcutScreens/HelpList';
 
-const WelcomeScreen = (context) => {
+const MenuCard = (context) => {
 	const { actions, state } = context;
 
 	return (
-		<div
-			role="welcomeScreen"
-			className="welcomeScreen"
-		>
-			<button onClick={ () => actions.gameStart(!state.ready) }>
-				Start
-			</button>
+		<div className="menu-card">
 			<button
-				className="helpButton"
+				className="start-btn"
+				onClick={ () => actions.gameStart(!state.ready) }
+			>Start Game</button>
+			<button
+				className="help-btn"
 				onClick={ (e) => {
 					e.target.blur();
 					actions.setHelp(!state.help);
 				} }
-			>Help</button>
-			<HelpList { ...context }/>
-		</div>);
+			>Help / Keys</button>
+		</div>
+	);
 };
+
+const WelcomeScreen = (context) =>
+	<div role="welcomeScreen" className="welcomeScreen">
+		<h1>SKY STRIKE</h1>
+		<MenuCard { ...context }/>
+		<div className="instructions">
+			Use Mouse to Move & Click to Shoot
+		</div>
+		<HelpList { ...context }/>
+	</div>;
 
 export default WelcomeScreen;
