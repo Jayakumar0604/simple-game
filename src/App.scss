@@ -60,14 +60,14 @@
 	}
 
 .container{
-		width: 20vmin;
+		width: 35vmin;
 		height: 7vmin;
 		border: .7vmin dashed firebrick;
 		display: flex;
 		justify-content: space-around;
 
 		.flightDamage{
-			width: 40%;
+			width: 20%;
 			height: 85%;
 			align-self: center;
 		}
@@ -76,6 +76,13 @@
 			font-size: 5vmin;
 			font-weight: 600;
 			align-self: center;
+		}
+
+		.high-score-hud{
+			font-size: 3.5vmin;
+			font-weight: 600;
+			align-self: center;
+			color: #ff8000;
 		}
 	}
 
